@@ -1,7 +1,10 @@
 # Define network
 networks:
   DbNetwork:
-    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/24
 
 # Define volumes
 volumes:
@@ -20,7 +23,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - DbNetwork
+      DbNetwork:
+        ipv4_address: 172.20.0.2
 
     restart: always
 
