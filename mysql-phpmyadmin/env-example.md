@@ -1,0 +1,3 @@
+MYSQL_DB=db
+MYSQL_USER=user
+MYSQL_PASSWORD=password
