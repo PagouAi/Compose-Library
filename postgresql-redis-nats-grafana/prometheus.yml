@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 5s
+  external_labels:
+    monitor: 'nats-server'
+
+scrape_configs:
+  - job_name: 'nats-server'
+    static_configs:
+      - targets: ['nats-exporter:7777']
