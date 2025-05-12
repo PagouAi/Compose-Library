@@ -72,5 +72,4 @@ Contributions are welcome! Feel free to submit:
 
 ## ❤️ Credits
 
-Maintained by [YourName or Organization]. Inspired by the awesome Docker
-community.
+Maintained by Pagou.ai. Inspired by the awesome Docker community.
