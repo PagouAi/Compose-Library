@@ -1,9 +1,13 @@
 global:
   scrape_interval: 5s
   external_labels:
-    monitor: 'nats-server'
+    nats: 'nats-server'
+    fastify: 'fastify-api'
 
 scrape_configs:
   - job_name: 'nats-server'
     static_configs:
       - targets: ['nats-exporter:7777']
+  - job_name: 'fastify-api'
+    static_configs:
+      - targets: ['host.docker.internal:3001']
