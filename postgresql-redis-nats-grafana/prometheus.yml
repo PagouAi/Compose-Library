@@ -3,6 +3,7 @@ global:
   external_labels:
     nats: 'nats-server'
     fastify: 'fastify-api'
+    postgres: 'postgresql-db'
 
 scrape_configs:
   - job_name: 'nats-server'
@@ -11,3 +12,6 @@ scrape_configs:
   - job_name: 'fastify-api'
     static_configs:
       - targets: ['host.docker.internal:3001']
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgresql-exporter:9187']

@@ -4,6 +4,14 @@ A curated collection of ready-to-use Docker Compose files for common development
 and infrastructure tools. Spin up services in seconds with minimal
 configuration.
 
+### ⚠️ Reminder
+
+> These Docker Compose files are intended **only for local development and
+> testing**.\
+> They are **not** production-ready and should **not be used in production
+> environments**.\
+> Using them in production is **at your own risk and responsibility**.
+
 ## 🚀 What’s Inside
 
 This repository includes Docker Compose setups for:

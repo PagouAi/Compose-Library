@@ -1,5 +1,5 @@
 networks:
-  DbNetwork:
+  monitoring:
     ipam:
       driver: default
       config:
@@ -26,7 +26,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      DbNetwork:
+      monitoring:
         ipv4_address: 172.20.0.2
 
     restart: always
@@ -40,7 +40,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      DbNetwork:
+      monitoring:
         ipv4_address: 172.20.0.3
 
     restart: always
@@ -51,13 +51,13 @@ services:
     ports:
       - "4222:4222"
       - "8222:8222" # DO NOT EXPOSE THIS PORT FOR PRODUCTION DEPLOYMENTS
-    networks:
-      DbNetwork:
-        ipv4_address: 172.20.0.4
     volumes:
       - nats_data:/var/lib/nats
     command: >
       -js -sd /var/lib/nats -m 8222 -a 0.0.0.0
+    networks:
+      monitoring:
+        ipv4_address: 172.20.0.4
 
     restart: always
 
@@ -67,12 +67,28 @@ services:
     ports:
       - "7777:7777"
     networks:
-      DbNetwork:
+      monitoring:
         ipv4_address: 172.20.0.5
     depends_on:
       - nats
     command: "-connz -subz -varz -jsz=all -healthz -connz http://nats:8222"
 
+    restart: always
+
+  postgresql-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgresql-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      - DATA_SOURCE_NAME=postgres://${POSTGRES_USER}:${POSTGRES_PW}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      - postgres
+    command: >
+      --web.listen-address=0.0.0.0:9187 --web.telemetry-path=/metrics --log.format=json
+    networks:
+      monitoring:
+        ipv4_address: 172.20.0.6
     restart: always
 
   prometheus:
@@ -83,8 +99,8 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
-      DbNetwork:
-        ipv4_address: 172.20.0.6
+      monitoring:
+        ipv4_address: 172.20.0.7
 
     restart: always
 
@@ -92,12 +108,14 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "3100:3000" #CHANGED: From 3000 to 3100 to avoid conflict with usual port 3000 for APIs / Frontends
     depends_on:
       - nats-exporter
+      - postgresql-exporter
+      - prometheus
     networks:
-      DbNetwork:
-        ipv4_address: 172.20.0.7
+      monitoring:
+        ipv4_address: 172.20.0.8
 
     volumes:
       - grafana_data:/var/lib/grafana
