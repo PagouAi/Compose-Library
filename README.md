@@ -16,17 +16,13 @@ configuration.
 
 This repository includes Docker Compose setups for:
 
-- 📦 **Databases**
-  - PostgreSQL
-  - MySQL
-  - Redis
-
-- 🔧 **Dev Tools**
-  - pgAdmin
-  - phpMyAdmin
-
-- 📊 **Monitoring & Logging**
-  - Prometheus + Grafana
+| Stack                  | Services                                          | Use Case                                     |
+| ---------------------- | ------------------------------------------------- | -------------------------------------------- |
+| `mysql-admin`          | MySQL + phpMyAdmin                                | MySQL database with web admin interface      |
+| `postgres-admin`       | PostgreSQL + pgAdmin                              | PostgreSQL database with web admin interface |
+| `postgres-redis`       | PostgreSQL + Redis                                | Database with caching layer                  |
+| `kafka-postgres-redis` | Kafka + Zookeeper + PostgreSQL + Redis + Kafka UI | Event streaming with database and cache      |
+| `observability-stack`  | PostgreSQL + Redis + NATS + Prometheus + Grafana  | Full monitoring and observability setup      |
 
 > Each service is in its own folder with isolated `docker-compose.yml` files for
 > modular use.
@@ -46,7 +42,7 @@ MacOs:
 ### Usage
 
 ```bash
-cd postgresql-redis
+cd kafka-postgres-redis
 docker compose up -d
 ```
 
